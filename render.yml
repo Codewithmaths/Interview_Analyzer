@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: ai-interview-bot
+    env: docker
+    plan: free   # bump to 'starter' if you hit memory limits
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
