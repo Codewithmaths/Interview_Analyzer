@@ -59,10 +59,10 @@ def analyze_frame(frame):
 
 
 def label_from_score(score: float) -> str:
-    if score >= 65:
-        return "confident"
-    elif score >= 45:
+    if score >= 60:
         return "energetic"
+    elif score >= 45:
+        return "confident"
     elif score >= 30:
         return "nervous"
     else:
