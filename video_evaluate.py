@@ -16,6 +16,10 @@ from facial_module import analyze_frame, composite_score, label_from_score
 
 def download_video_from_url(url: str, out_dir: str) -> str:
     outtmpl = os.path.join(out_dir, "downloaded.%(ext)s")
+    
+    cookie_path = "/etc/secrets/cookies.txt" if os.path.exists("/etc/secrets/cookies.txt") else "cookies.txt"
+    print(f"DEBUG: Using cookiefile = {cookie_path}, exists = {os.path.exists(cookie_path)}")
+    
     ydl_opts = {
         "outtmpl": outtmpl,
         "format": "bestvideo+bestaudio/best",
@@ -23,11 +27,11 @@ def download_video_from_url(url: str, out_dir: str) -> str:
         "quiet": False,
         "no_warnings": False,
         "max_filesize": 200 * 1024 * 1024,
-        "cookiefile": "/etc/secrets/cookies.txt" if os.path.exists("/etc/secrets/cookies.txt") else "cookies.txt",
-}
+        "cookiefile": cookie_path,
+    }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
-
+    ...
     mp4_candidates = glob.glob(os.path.join(out_dir, "downloaded.mp4"))
     if mp4_candidates:
         return mp4_candidates[0]

@@ -59,14 +59,14 @@ def analyze_frame(frame):
 
 
 def label_from_score(score: float) -> str:
-    if score >= 70:
+    if score >= 65:
         return "confident"
-    elif score >= 50:
+    elif score >= 45:
         return "energetic"
     elif score >= 30:
-        return "low"
-    else:
         return "nervous"
+    else:
+        return "low_confidence"
 
 
 def composite_score(analysis, blink_rate_per_min):

@@ -43,7 +43,7 @@ def llm_judge(question: str, candidate_answer: str, ideal_answer: str) -> dict:
     prompt = f"""
 You are an interview evaluator. Given the question, the ideal answer, and the candidate's answer,
 return STRICT JSON only (no markdown, no preamble) with keys:
-- "correctness": "correct" | "incorrect" | "partial"
+- "correctness": "correct" | "incorrect" | "partial correct" | "not_confirmable" (if the question asks for a personal fact/claim that cannot be verified as true or false)
 - "reasoning": short 1-line reason
 - "confidence_in_answer": integer 0-100 (how confidently/clearly the answer addresses the question)
 
@@ -82,7 +82,7 @@ the full prior context.
 Classify "correctness" as exactly one of these four values:
 - "correct" — the answer is verifiably right
 - "incorrect" — the answer is verifiably wrong
-- "partial" — the answer is incomplete or only partly addresses the question
+- "partial correct" — the answer is incomplete or only partly addresses the question
 - "not_confirmable" — the question asks for a personal fact/claim that cannot be verified as
   true or false (not the same as "ambiguous due to an unresolved pronoun" — resolve pronouns first)
 
@@ -92,7 +92,7 @@ yourself step by step first, then compare to the candidate's answer exactly.
 {"Use the prior turns to resolve any pronouns or references in the current question/answer, and for general context on what stage of the conversation this is — do not judge the prior turns themselves." if conversation_history else ""}
 
 Return STRICT JSON only (no markdown, no preamble) with keys:
-- "correctness": "correct" | "incorrect" | "partial" | "not_confirmable"
+- "correctness": "correct" | "incorrect" | "partial correct" | "not_confirmable"
 - "reasoning": short 1-line reason, factually consistent with the candidate's actual answer text
 - "confidence_in_answer": integer 0-100
 
@@ -191,7 +191,7 @@ def classify_answer(overall_confidence: float, correctness: str = None) -> dict:
     if correctness == "not_confirmable":
         return {"verdict": "not_confirmed", "needs_followup": False}
 
-    if overall_confidence >= 75:
+    if overall_confidence >= 70:
         verdict = "correct"
         needs_followup = False
     elif overall_confidence >= 40:
@@ -216,7 +216,7 @@ def generate_followup(question: str, candidate_answer: str, conversation_history
     prompt = f"""
 The candidate gave a partially correct / unclear answer to this interview question.
 {"Use the prior turns to understand any pronouns or references in the current question/answer before deciding what to ask." if conversation_history else ""}
-Ask ONE short, targeted follow-up question that probes deeper into their answer
+Ask Two or Three short, targeted follow-up question that probes deeper into their answer
 to clarify or test true understanding. Do NOT ask them to clarify a pronoun or reference that is
 already clear from the prior turns. Return only the question text.
 
