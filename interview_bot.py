@@ -4,25 +4,25 @@ load_dotenv()
 
 import os
 import json
-from sentence_transformers import SentenceTransformer, util
+# from sentence_transformers import SentenceTransformer, util
 from groq import Groq
 
 groq_client = Groq(api_key=os.environ["GROQ_API_KEY"])
 
 # Used for optional reference-answer comparison (kept available, no longer required by default flow)
-similarity_model = SentenceTransformer("all-MiniLM-L6-v2")
+# similarity_model = SentenceTransformer("all-MiniLM-L6-v2")
 
 GROQ_MODEL = "llama-3.3-70b-versatile"
 
-def semantic_score(candidate_answer: str, ideal_answer: str) -> float:
-    """Cosine-similarity based score (0-100) between a candidate answer and a reference answer.
-    Only used if you still want reference-answer comparison somewhere."""
-    if not candidate_answer or not ideal_answer:
-        return 0.0
-    emb1 = similarity_model.encode(candidate_answer, convert_to_tensor=True)
-    emb2 = similarity_model.encode(ideal_answer, convert_to_tensor=True)
-    sim = util.cos_sim(emb1, emb2).item()
-    return max(0, min(1, sim)) * 100
+# def semantic_score(candidate_answer: str, ideal_answer: str) -> float:
+#     """Cosine-similarity based score (0-100) between a candidate answer and a reference answer.
+#     Only used if you still want reference-answer comparison somewhere."""
+#     if not candidate_answer or not ideal_answer:
+#         return 0.0
+#     emb1 = similarity_model.encode(candidate_answer, convert_to_tensor=True)
+#     emb2 = similarity_model.encode(ideal_answer, convert_to_tensor=True)
+#     sim = util.cos_sim(emb1, emb2).item()
+#     return max(0, min(1, sim)) * 100
 
 
 def _clean_json_response(content: str) -> str:
