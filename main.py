@@ -16,12 +16,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from ws_audio import AudioSession, transcribe_pcm
 from facial_session import FacialSession
 from facial_module import analyze_frame, composite_score, label_from_score
-from interview_bot import semantic_score, llm_judge, generate_followup, classify_answer
+from interview_bot import llm_judge, generate_followup, classify_answer
 from video_evaluate import evaluate_uploaded_video, evaluate_video_url
 
 from interview_bot import (
-    semantic_score, llm_judge, generate_followup, classify_answer,
-    classify_utterance, llm_judge_no_reference,
+    llm_judge_no_reference, generate_followup, classify_answer,
+    classify_utterance
 )
 
 app = FastAPI()

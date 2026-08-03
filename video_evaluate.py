@@ -6,11 +6,11 @@ import os
 import glob
 import cv2
 import yt_dlp
-from interview_bot import semantic_score, llm_judge, generate_followup, classify_answer
+from interview_bot import llm_judge, generate_followup, classify_answer
 from facial_module import analyze_frame, composite_score, label_from_score
 from facial_module import analyze_frame, composite_score
 from ws_audio import stt_model
-from interview_bot import semantic_score, llm_judge, generate_followup
+# from interview_bot import llm_judge, generate_followup
 from interview_bot import llm_judge_no_reference, generate_followup, classify_answer, parse_qa_pairs_from_transcript
 from facial_module import analyze_frame, composite_score, label_from_score
 

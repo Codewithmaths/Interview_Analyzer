@@ -1,9 +1,5 @@
-venv1/
 venv/
-.venv/
-**/__pycache__/
+venv1/
+__pycache__/
 *.pyc
-*.dll
-*.pyd
-*.so
 .env
