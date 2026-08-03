@@ -14,19 +14,17 @@ from ws_audio import stt_model
 from interview_bot import llm_judge_no_reference, generate_followup, classify_answer, parse_qa_pairs_from_transcript
 from facial_module import analyze_frame, composite_score, label_from_score
 
-
 def download_video_from_url(url: str, out_dir: str) -> str:
     outtmpl = os.path.join(out_dir, "downloaded.%(ext)s")
     ydl_opts = {
-    "outtmpl": outtmpl,
-    "format": "bestvideo+bestaudio/best",
-    "merge_output_format": "mp4",
-    "quiet": False,
-    "no_warnings": False,
-    "max_filesize": 200 * 1024 * 1024,
-    "socket_timeout": 60,     # <-- new: give it more time
-    "retries": 5,             # <-- new: auto-retry on transient failures
-}
+        "outtmpl": outtmpl,
+        "format": "bestvideo+bestaudio/best",
+        "merge_output_format": "mp4",
+        "quiet": False,
+        "no_warnings": False,
+        "max_filesize": 200 * 1024 * 1024,
+        "cookiefile": "cookies.txt",   # <-- यह नई line
+    }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
 
@@ -39,7 +37,6 @@ def download_video_from_url(url: str, out_dir: str) -> str:
     if not all_candidates:
         raise RuntimeError("yt-dlp did not produce any output file — download may have failed silently.")
     return all_candidates[0]
-
 
 def extract_audio(video_path: str, out_wav_path: str) -> bool:
     """Returns True if audio was extracted, False if the video has no audio track."""
