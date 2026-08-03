@@ -26,5 +26,5 @@ faster-whisper
 groq
 fastapi
 uvicorn
-gradio
+# gradio
 python-dotenv
