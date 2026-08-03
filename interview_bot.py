@@ -12,7 +12,7 @@ groq_client = Groq(api_key=os.environ["GROQ_API_KEY"])
 # Used for optional reference-answer comparison (kept available, no longer required by default flow)
 # similarity_model = SentenceTransformer("all-MiniLM-L6-v2")
 
-GROQ_MODEL = "llama-3.3-70b-versatile"
+GROQ_MODEL = "llama-3.1-8b-instant"
 
 # def semantic_score(candidate_answer: str, ideal_answer: str) -> float:
 #     """Cosine-similarity based score (0-100) between a candidate answer and a reference answer.
