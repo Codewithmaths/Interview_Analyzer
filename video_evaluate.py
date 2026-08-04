@@ -15,11 +15,12 @@ from interview_bot import llm_judge_no_reference, generate_followup, classify_an
 from facial_module import analyze_frame, composite_score, label_from_score
 
 def download_video_from_url(url: str, out_dir: str) -> str:
-    outtmpl = os.path.join(out_dir, "downloaded.%(ext)s")
-    
+
     cookie_path = "/etc/secrets/cookies.txt" if os.path.exists("/etc/secrets/cookies.txt") else "cookies.txt"
-    print(f"DEBUG: Using cookiefile = {cookie_path}, exists = {os.path.exists(cookie_path)}")
+    print(f"DEBUG: cookie_path={cookie_path}, exists={os.path.exists(cookie_path)}", flush=True)
+    print(f"DEBUG: /etc/secrets contents = {os.listdir('/etc/secrets') if os.path.exists('/etc/secrets') else 'MISSING'}", flush=True)
     
+    outtmpl = os.path.join(out_dir, "downloaded.%(ext)s")
     ydl_opts = {
         "outtmpl": outtmpl,
         "format": "bestvideo+bestaudio/best",
