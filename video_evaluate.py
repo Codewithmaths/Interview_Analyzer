@@ -41,7 +41,7 @@ def download_video_from_url(url: str, out_dir: str) -> str:
     # }
     ydl_opts = {
     "outtmpl": outtmpl,
-    "format": "bestvideo*+bestaudio/best/bv*+ba/b",
+    "format": "best/bestvideo+bestaudio/bv*+ba/b*",
     "merge_output_format": "mp4",
     "quiet": False,
     "no_warnings": False,
