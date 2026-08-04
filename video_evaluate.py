@@ -31,13 +31,21 @@ def download_video_from_url(url: str, out_dir: str) -> str:
     print(f"DEBUG: cookie_path={cookie_path}, exists={os.path.exists(cookie_path) if cookie_path else False}", flush=True)
 
     outtmpl = os.path.join(out_dir, "downloaded.%(ext)s")
+    # ydl_opts = {
+    #     "outtmpl": outtmpl,
+    #     "format": "bestvideo+bestaudio/best",
+    #     "merge_output_format": "mp4",
+    #     "quiet": False,
+    #     "no_warnings": False,
+    #     "max_filesize": 200 * 1024 * 1024,
+    # }
     ydl_opts = {
-        "outtmpl": outtmpl,
-        "format": "bestvideo+bestaudio/best",
-        "merge_output_format": "mp4",
-        "quiet": False,
-        "no_warnings": False,
-        "max_filesize": 200 * 1024 * 1024,
+    "outtmpl": outtmpl,
+    "format": "bestvideo*+bestaudio/best/bv*+ba/b",
+    "merge_output_format": "mp4",
+    "quiet": False,
+    "no_warnings": False,
+    "max_filesize": 200 * 1024 * 1024,
     }
     if cookie_path:
         ydl_opts["cookiefile"] = cookie_path
