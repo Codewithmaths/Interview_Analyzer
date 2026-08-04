@@ -14,12 +14,22 @@ from ws_audio import stt_model
 from interview_bot import llm_judge_no_reference, generate_followup, classify_answer, parse_qa_pairs_from_transcript
 from facial_module import analyze_frame, composite_score, label_from_score
 
-def download_video_from_url(url: str, out_dir: str) -> str:
+import shutil
 
-    cookie_path = "/etc/secrets/cookies.txt" if os.path.exists("/etc/secrets/cookies.txt") else "cookies.txt"
-    print(f"DEBUG: cookie_path={cookie_path}, exists={os.path.exists(cookie_path)}", flush=True)
-    print(f"DEBUG: /etc/secrets contents = {os.listdir('/etc/secrets') if os.path.exists('/etc/secrets') else 'MISSING'}", flush=True)
-    
+def download_video_from_url(url: str, out_dir: str) -> str:
+    secret_cookie_path = "/etc/secrets/cookies.txt"
+    writable_cookie_path = "/tmp/cookies.txt"
+
+    if os.path.exists(secret_cookie_path):
+        shutil.copy(secret_cookie_path, writable_cookie_path)
+        cookie_path = writable_cookie_path
+    elif os.path.exists("cookies.txt"):
+        cookie_path = "cookies.txt"
+    else:
+        cookie_path = None
+
+    print(f"DEBUG: cookie_path={cookie_path}, exists={os.path.exists(cookie_path) if cookie_path else False}", flush=True)
+
     outtmpl = os.path.join(out_dir, "downloaded.%(ext)s")
     ydl_opts = {
         "outtmpl": outtmpl,
@@ -28,17 +38,18 @@ def download_video_from_url(url: str, out_dir: str) -> str:
         "quiet": False,
         "no_warnings": False,
         "max_filesize": 200 * 1024 * 1024,
-        "cookiefile": cookie_path,
     }
+    if cookie_path:
+        ydl_opts["cookiefile"] = cookie_path
+
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
-    ...
+
     mp4_candidates = glob.glob(os.path.join(out_dir, "downloaded.mp4"))
     if mp4_candidates:
         return mp4_candidates[0]
 
     all_candidates = glob.glob(os.path.join(out_dir, "downloaded.*"))
-    print("WARNING: no merged .mp4 found, candidates were:", all_candidates)
     if not all_candidates:
         raise RuntimeError("yt-dlp did not produce any output file — download may have failed silently.")
     return all_candidates[0]
