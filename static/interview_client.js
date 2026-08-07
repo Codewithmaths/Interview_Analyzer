@@ -75,9 +75,10 @@ $("startBtn").addEventListener("click", async () => {
    videoWs.onmessage = (event) => {
       try {
          const result = JSON.parse(event.data);
-         if (typeof result.score === "number") {
-            $("facialScore").textContent = Math.round(result.score);
-            $("facialLabel").textContent = result.label || "—";
+         if (result.face_detected === false) {
+            $("facialLabel").textContent = "Face Not Detected";
+         } else if (result.label) {
+            $("facialLabel").textContent = result.label;
          }
       } catch (e) {
          // ignore
@@ -105,6 +106,8 @@ function stopAll() {
    setDot("videoDot", "");
    $("startBtn").disabled = false;
    $("stopBtn").disabled = true;
+
+   $("facialLabel").textContent = "no data";
 }
 
 // --- Continuous audio streaming (16kHz PCM16) ---
@@ -203,7 +206,8 @@ function renderQuestionDetected(question) {
    const entry = document.createElement("div");
    entry.className = "entry";
    entry.innerHTML = `<div class="question-detected">🎤 Question detected: <strong>${escapeHtml(question)}</strong></div>`;
-   log.prepend(entry);
+   log.appendChild(entry);
+   log.scrollTop = log.scrollHeight;
 }
 
 function renderEvaluation(result) {
@@ -240,7 +244,8 @@ function renderEvaluation(result) {
     ${result.followup_question ? `<div class="followup">Follow-up: ${escapeHtml(result.followup_question)}</div>` : ""}
   `;
 
-   log.prepend(entry);
+   log.appendChild(entry);
+   log.scrollTop = log.scrollHeight;
 }
 
 function escapeHtml(str) {

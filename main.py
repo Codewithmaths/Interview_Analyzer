@@ -60,15 +60,23 @@ async def video_ws(websocket: WebSocket, session_id: str):
             data = await websocket.receive_bytes()
             frame = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_COLOR)
             analysis = analyze_frame(frame)
+
             if analysis.get("face_detected"):
                 blink_rate = sess["facial"].blink_rate_per_min()
                 result = composite_score(analysis, blink_rate)
                 sess["facial"].update(result["score"], analysis["eye_aspect_ratio"])
-                await websocket.send_json({"score": result["score"], "label": result["label"]})
+                await websocket.send_json({
+                    "face_detected": True,
+                    "score": result["score"],
+                    "label": result["label"],
+                })
+            else:
+                await websocket.send_json({
+                    "face_detected": False,
+                })
     except WebSocketDisconnect:
         pass
-
-
+    
 def get_session(session_id):
     if session_id not in sessions:
         sessions[session_id] = {

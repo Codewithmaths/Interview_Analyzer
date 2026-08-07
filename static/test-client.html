@@ -257,14 +257,9 @@
       <!-- LEFT COLUMN -->
       <div class="panel">
 
-         <h2>Session</h2>
-
-         <label for="serverUrl">Server base (host:port)</label>
-         <input type="text" id="serverUrl" value="127.0.0.1:8000">
-
-         <label for="sessionId">Session ID</label>
-         <input type="text" id="sessionId" value="test123">
-
+         <input type="hidden" id="serverUrl" value="127.0.0.1:8000">
+         <input type="hidden" id="sessionId" value="test123">
+      
          <hr class="divider">
 
          <h2>Live Interview (webcam + mic)</h2>
@@ -305,11 +300,9 @@
       <!-- RIGHT COLUMN -->
       <div class="panel">
          <h2>Live Facial Signal</h2>
-         <div class="score-block">
-            <div class="score-num" id="facialScore">—</div>
-            <div class="score-label" id="facialLabel">no data</div>
-         </div>
-
+      <div class="score-block">
+         <div class="score-label" id="facialLabel" style="font-size:20px; text-transform:none;">no data</div>
+      </div>
          <h2 style="margin-top:24px;">Answer Evaluations</h2>
          <div class="log" id="log">
             <div class="hint">Waiting for the first detected question or answer...</div>
